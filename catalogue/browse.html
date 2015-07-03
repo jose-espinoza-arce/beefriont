@@ -4,6 +4,7 @@
 {% load promotion_tags %}
 {% load category_tags %}
 {% load product_tags %}
+{% load staticfiles %}
 {% load i18n %}
 
 {% block title %}
@@ -12,18 +13,75 @@
 
 {% block headertext %}{{ summary }}{% endblock %}
 
+
+
+{% block head_section %}
+    {% comment %}<img src="{% static 'peker/images/slide__img.jpg'%}" alt="" class="img-responsive">
+    <h1 class="category__title">Tienda</h1>{% endcomment %}
+{% endblock %}
+
+{% block head_title %}
+    <span><a href="{{ homepage_url }}">{% trans "Home" %}</a> /  Tienda </span></span>
+{% endblock %}
+
+
+{% block side_categories %}
+{% comment %}<h1 class="filter__title">Categorías</h1>
+    <p><a href="http://beemarket.mx/peker/categoria/2/recamaras">
+                                <strong>Recámaras</strong>
+                            </a></p>{% endcomment %}
+    {% category_tree as tree_categories %}
+    {% if tree_categories %}
+        <div class="filter__box">
+            <ul class="">
+                {% for tree_category, info in tree_categories %}
+                    <li><p>
+                    {% if tree_category.pk == category.pk %}
+                        <strong>{{ tree_category.name }}</strong>
+                    {% else %}
+                        <a href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                    {% endif %}
+
+                    {% if info.has_children %}<ul>{% else %}</p></li>{% endif %}
+                    {% for n in info.num_to_close %}
+                        </ul></p></li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block side_filters %} {% endblock %}
+
+
+{% block items %}
+    {% for product in products %}
+        {% render_peker_product product %}
+    {% endfor %}
+    {% include "partials/pagination.html" %}
+{% endblock %}
+
+
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
+    {% comment %}<ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{{ summary }}</li>
-    </ul>
+    </ul>{% endcomment %}
+    {% comment %}<section class="head-title">
+        <span><a href="{{ homepage_url }}">{% trans "Home" %}</a></span>
+        <span class="divider">/</span>
+        <span class="active">{{ summary }}</span>
+    </section>{% endcomment %}
 {% endblock breadcrumbs %}
 
 {% block column_left %}
-    {% category_tree as tree_categories %}
+    {% comment %}{% category_tree as tree_categories %}
     {% if tree_categories %}
         <h4>{% trans "Show results for" %}</h4>
         <div class="side_categories">
@@ -53,7 +111,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-    {% endif %}
+    {% endif %}{% endcomment %}
 {% endblock %}
 
 {% block content %}
